@@ -1,6 +1,7 @@
 package session
 
 import (
+	"errors"
 	"time"
 
 	bus "github.com/adamsanghera/redisBus"
@@ -29,13 +30,16 @@ Examination of possible states
 // Creates a new session for a given user, if one does not already exist.
 // If a valid session already exists, no action is taken.
 func Create(uname string) (string, time.Duration, error) {
+	// Prepare for panicking sub-methods
+	err := errors.New("Unknown error")
+	defer catchError(&err)
+
 	// Make a new token!
-	token := genToken(tokenLength)
+	token := genToken()
 
 	// Try to Set the key
 	result, err := bus.Client.SetNX(uname, token, expirationTime).Result()
 	if err != nil {
-		// We really don't
 		return "", 0, err
 	}
 

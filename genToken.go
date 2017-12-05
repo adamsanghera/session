@@ -10,13 +10,11 @@ const (
 	expirationTime = time.Duration(time.Second * 300)
 )
 
-func genToken(size int) string {
-	token := make([]byte, size)
+func genToken() string {
+	token := make([]byte, tokenLength)
 	_, err := rand.Read(token)
 	if err != nil {
-		// What to do?
-		// 	 panic(err)
-		//   return err
+		panic(err)
 	}
 	return string(token)
 }
