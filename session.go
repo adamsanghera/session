@@ -1,7 +1,6 @@
 package session
 
 import (
-	"errors"
 	"time"
 
 	bus "github.com/adamsanghera/redisBus"
@@ -26,14 +25,30 @@ Examination of possible states
 		Do nothing.
 */
 
-//Create ...
-// Creates a new session for a given user, if one does not already exist.
-// If a valid session already exists, no action is taken.
-func Create(uname string) (string, time.Duration, error) {
-	// Prepare for panicking sub-methods
-	err := errors.New("Unknown error")
-	defer catchError(&err)
+// Session is a type that allows the user to configure their own kinds of token.
+// tokenLength stipulates the length of the token.
+// timeToLive stipulates the amount of time that a session's token is valid.
+// id allows users to create different kinds of sessions.
+//   for example, one can make a token for free users, and a token for paid users.
+type Session struct {
+	tokenLength int
+	timeToLive  time.Duration
+	id          int
+}
 
+// Returns an instance of the Session struct, which allows users to create tokens
+// and validate their own sessions.
+func NewSession(tokenLength int, timeToLive time.Duration, id int) *Session {
+	return &Session{
+		tokenLength: tokenLength,
+		timeToLive:  timeToLive,
+		id:          id,
+	}
+}
+
+// CreateToken allows one to instantiate a new session, given a username.
+// If a valid session instance already exists for the given user, no action is taken.
+func (*Session) CreateToken(uname string) (string, time.Duration, error) {
 	// Make a new token!
 	token := genToken()
 
