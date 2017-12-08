@@ -8,7 +8,7 @@ func (sesh *Session) Renew(uname string, challenge string) (string, time.Duratio
 		return "", 0, err
 	}
 	if valid {
-		return sesh.CreateToken(uname)
+		return sesh.Begin(uname)
 	}
 	return "", 0, err
 }

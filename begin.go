@@ -26,5 +26,5 @@ func (sesh *Session) Begin(uname string) (string, time.Duration, error) {
 	}
 
 	// If the key is set, then the user has just been logged in!
-	return token, expirationTime, nil
+	return token, sesh.timeToLive, nil
 }
