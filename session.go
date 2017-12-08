@@ -2,8 +2,6 @@ package session
 
 import (
 	"time"
-
-	bus "github.com/adamsanghera/redisBus"
 )
 
 /*
@@ -33,12 +31,12 @@ Examination of possible states
 type Session struct {
 	tokenLength int
 	timeToLive  time.Duration
-	id          int
+	id          string
 }
 
-// Returns an instance of the Session struct, which allows users to create tokens
-// and validate their own sessions.
-func NewSession(tokenLength int, timeToLive time.Duration, id int) *Session {
+//NewSession returns an instance of the Session struct.
+// It's up to the user to make sure that they maintain unique ids.
+func NewSession(tokenLength int, timeToLive time.Duration, id string) *Session {
 	return &Session{
 		tokenLength: tokenLength,
 		timeToLive:  timeToLive,
@@ -46,25 +44,10 @@ func NewSession(tokenLength int, timeToLive time.Duration, id int) *Session {
 	}
 }
 
-// CreateToken allows one to instantiate a new session, given a username.
-// If a valid session instance already exists for the given user, no action is taken.
-func (*Session) CreateToken(uname string) (string, time.Duration, error) {
-	// Make a new token!
-	token := genToken()
-
-	// Try to Set the key
-	result, err := bus.Client.SetNX(uname, token, expirationTime).Result()
-	if err != nil {
-		return "", 0, err
+func NewBasicSession() *Session {
+	return &Session{
+		tokenLength: tokenLength,
+		timeToLive:  expirationTime,
+		id:          "",
 	}
-
-	// If unset, then the user already has a valid token.
-	//   While it might be reasonable to renew the token automatically here,
-	//   such an operation is beyond the scope of this function.
-	if result == false {
-		return "", time.Duration(0), ErrTokenExists
-	}
-
-	// If the key is set, then the user has just been logged in!
-	return token, expirationTime, nil
 }

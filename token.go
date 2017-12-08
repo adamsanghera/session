@@ -10,8 +10,9 @@ const (
 	expirationTime = time.Duration(time.Second * 300)
 )
 
-func genToken() string {
-	token := make([]byte, tokenLength)
+//Generates a new token for the session.
+func (sesh *Session) genToken() string {
+	token := make([]byte, sesh.tokenLength)
 	_, err := rand.Read(token)
 	if err != nil {
 		panic(err)
