@@ -25,6 +25,8 @@ This package is used to manage user sessions in generic web applications, where 
 
 ## Yet to come
 
+1. SecureSession, which only stores hashes of usernames/ids.
+
 # Interesting issue...
 
 What if we want to make two different kinds of token for the same username?
