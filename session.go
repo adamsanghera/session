@@ -4,6 +4,11 @@ import (
 	"time"
 )
 
+const (
+	defaultTokenLength    = 256
+	defaultExpirationTime = time.Duration(time.Second * 300)
+)
+
 /*
 Examination of possible states
 	There are the following possible session states:
@@ -34,6 +39,14 @@ type Session struct {
 	id          string
 }
 
+// SecureSession is the same as Session except that it stores
+// hashes of usernames and ids in redis, instead of plaintext
+type SecureSession struct {
+	tokenLength int
+	timeToLive  time.Duration
+	id          string
+}
+
 //NewSession returns an instance of the Session struct.
 // It's up to the user to make sure that they maintain unique ids.
 func NewSession(tokenLength int, timeToLive time.Duration, id string) *Session {
@@ -46,8 +59,8 @@ func NewSession(tokenLength int, timeToLive time.Duration, id string) *Session {
 
 func NewBasicSession() *Session {
 	return &Session{
-		tokenLength: tokenLength,
-		timeToLive:  expirationTime,
+		tokenLength: defaultTokenLength,
+		timeToLive:  defaultExpirationTime,
 		id:          "",
 	}
 }
