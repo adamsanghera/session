@@ -2,12 +2,6 @@ package session
 
 import (
 	"crypto/rand"
-	"time"
-)
-
-const (
-	tokenLength    = 256
-	expirationTime = time.Duration(time.Second * 300)
 )
 
 func genToken(length int) string {
