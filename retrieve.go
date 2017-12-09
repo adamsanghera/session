@@ -6,7 +6,6 @@ import (
 )
 
 // retrieve returns the tokens indexed by the username/id
-
 func (sesh *Session) retrieve(uname string) (string, error) {
 	res, err := bus.Client.Get(uname + "_" + sesh.id).Result()
 	if err != nil {
@@ -16,7 +15,6 @@ func (sesh *Session) retrieve(uname string) (string, error) {
 }
 
 // secure retrieve simply retrieves by hashed key
-
 func (sesh *SecureSession) retrieve(uname string) (string, error) {
 	key := hashing.WithoutSalt(uname + "_" + sesh.id)
 
